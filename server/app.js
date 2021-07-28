@@ -21,7 +21,7 @@ app.use((req, res, next) => {
  });
 
  app.use('/', (req, res) => {
-  res.send('hello from the server')
+  res.send('hello from the server!')
  })
 
 module.exports = app;
