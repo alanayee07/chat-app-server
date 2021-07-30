@@ -1,31 +1,31 @@
 "use strict";
 
-// const app = require('./app');
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => {
-//   console.log(`App is listening on port ${PORT}`);
-// });
 var express = require('express');
 
+var http = require('http');
+
+var socketIo = require('socket.io');
+
+var port = process.env.PORT || 4001;
 var app = express();
+var server = http.createServer(app); // sets up a new server instance of socket.io
 
-var http = require('http').createServer(app);
-
-var io = require('socket.io')(http, {
-  cors: {
-    origin: ['http://localhost:3001']
-  }
-});
-
+var io = socketIo(server);
 app.get('/', function (req, res) {
   res.send('Hello World from the server');
-});
+}); // set up connection event listener between server and the client
+
 io.on('connection', function (socket) {
   console.log('a user connected');
+  socket.on('incoming data', function (data) {
+    socket.broadcast.emit('outgoing data', {
+      num: data
+    });
+  });
   socket.on('disconnect', function () {
     console.log('user disconnected');
   });
 });
-http.listen(3000, function () {
-  console.log('listening on *:3000');
+server.listen(port, function () {
+  console.log("Listening on port ".concat(port));
 });

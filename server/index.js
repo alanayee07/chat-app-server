@@ -1,26 +1,32 @@
 const express = require('express');
-const app = express();
-const http = require('http').createServer(app);
+const http = require('http');
+const socketIo = require('socket.io');
 
-// passing the http object and the cors options to allow our react localhost url, you can put in the url or your frontend client
-const io = require('socket.io')(http, {
-  cors: {
-    origin: ['http://localhost:3001']
-  }
-})
+const port = process.env.PORT || 4001;
+
+const app = express();
+const server = http.createServer(app);
+// sets up a new server instance of socket.io
+const io = socketIo(server);
+
+
 
 app.get('/', (req, res) => {
   res.send('Hello World from the server');
 });
 
-// listen on the connection and disconnection events for incoming sockets and log into console
-io.on('connection', (socket) => {
+// set up connection event listener between server and the client
+io.on('connection', socket => {
   console.log('a user connected');
+  socket.on('incoming data', data => {
+    socket.broadcast.emit('outgoing data', {num: data})
+  });
+
   socket.on('disconnect', () => {
     console.log('user disconnected');
   })
 })
 
-http.listen(3000, () => {
-  console.log('listening on *:3000');
+server.listen(port, () => {
+  console.log(`Listening on port ${port}`);
 })
