@@ -4,7 +4,11 @@ const app = express();
 const server = http.createServer(app);
 const socketIo = require('socket.io');
 // sets up a new server instance of socket.io
-const io = socketIo(server);
+const io = socketIo(server, {
+  cors: {
+    origin: '*',
+  }
+});
 
 const port = process.env.PORT || 4001;
 
@@ -20,6 +24,7 @@ io.on('connection', socket => {
   socket.emit("your id", socket.id);
   socket.on('send message', body => {
     // all clients connected should receive msg
+    console.log('message received on server: ', body);
     io.emit("message", body)
   })
 })
