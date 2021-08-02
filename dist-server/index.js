@@ -15,20 +15,17 @@ var io = socketIo(server, {
     origin: '*'
   }
 });
-var port = process.env.PORT || 4001;
 app.get('/', function (req, res) {
   res.send('Hello World from the server');
 }); // set up connection event listener between server and the client
 
 io.on('connection', function (socket) {
   console.log('a user connected');
-  socket.emit("your id", socket.id);
-  socket.on('send message', function (body) {
-    // all clients connected should receive msg
-    console.log('message received on server: ', body);
-    io.emit("message", body);
+  socket.on('message', function (body) {
+    console.log('Message received on server: ', body);
+    io.emit('message', body);
   });
 });
-server.listen(port, function () {
-  console.log("Listening on port ".concat(port));
+server.listen(7000, function () {
+  console.log("Listening on port 7000");
 });

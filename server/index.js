@@ -6,11 +6,9 @@ const socketIo = require('socket.io');
 // sets up a new server instance of socket.io
 const io = socketIo(server, {
   cors: {
-    origin: '*',
+    origin:'*',
   }
-});
-
-const port = process.env.PORT || 4001;
+})
 
 
 
@@ -19,16 +17,14 @@ app.get('/', (req, res) => {
 });
 
 // set up connection event listener between server and the client
-io.on('connection', socket => {
+io.on('connection', (socket) => {
   console.log('a user connected');
-  socket.emit("your id", socket.id);
-  socket.on('send message', body => {
-    // all clients connected should receive msg
-    console.log('message received on server: ', body);
-    io.emit("message", body)
+  socket.on('message', body => {
+    console.log('Message received on server: ', body);
+    io.emit('message', body)
   })
 })
 
-server.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+server.listen(7000, () => {
+  console.log(`Listening on port 7000`);
 })
