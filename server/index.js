@@ -10,7 +10,6 @@ const io = socket(server, {
   }
 })
 
-const rooms = ['Alana-Room', 'Phong-Room', 'Matt-Room'];
 
 const PORT = process.env.PORT || 7000;
 
@@ -18,24 +17,33 @@ const PORT = process.env.PORT || 7000;
 io.on('connection', (socket) => {
   // const { id } = socket.client;
   // console.log(`User connected: ${id}`);
-  console.log('socket obj: ', socket);
+  // console.log('socket obj: ', socket);
   console.log('user connected on socketID: ', socket.id);
-  const obj2 = {
-    rooms
-  }
-  // we send back obj2 to room
-  console.log('this is obj2: ', obj2);
-  io.to(socket.id).emit('message', obj2);
+
+  socket.on('join', room => {
+    socket.join(room.roomName);
+    const roomObj = {
+      room
+    }
+    console.log('joined room: ', roomObj);
+    io.to(room.roomName).emit('join', roomObj);
+  })
+
+  // const obj2 = {
+  //   rooms
+  // }
+  // // we send back obj2 to room
+
+  // io.to(socket.id).emit('message', );
   // broadcast message to 1 user connected
   socket.on("message", (userObj, msg) => {
-    console.log('socketID: ', socket.id);
     console.log('userObj', userObj);
-
     if (userObj.room) {
       socket.join(userObj.room);
-      console.log('user has joined this room: ', socket.room);
       const obj = {
         message: userObj.message,
+        id: userObj.userId,
+        roomName: userObj.room,
         comment: 'this is coming from the server',
       }
       io.to(userObj.room).emit('message', obj);
@@ -44,7 +52,6 @@ io.on('connection', (socket) => {
     // and then later
     // io.to(userId).emit('hi');
     // console.log(`Message received on server from ID: ${id}: ${msg}`);
-    // socket.to(anotherSocketId).emit("message", socket.id, msg);
     // io.emit("message", msg);
   })
 
