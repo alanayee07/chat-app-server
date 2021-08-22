@@ -17,19 +17,21 @@ io.on('connection', (socket) => {
   // const { id } = socket.client;
   console.log('user connected on socketID: ', socket.id);
 
+  let currentRoom;
   // broadcast message to 1 user connected
-  socket.on("message", (userObj, msg) => {
+  socket.on("message", (userObj) => {
     console.log('userObj', userObj);
-    if (userObj.room) {
+    if (userObj.room && !currentRoom) {
+      currentRoom = userObj.room;
       socket.join(userObj.room);
-      const obj = {
-        message: userObj.message,
-        id: userObj.userId,
-        roomName: userObj.room,
-        comment: 'this is coming from the server',
-      }
-      io.to(userObj.room).emit('message', obj);
     }
+    const obj = {
+      message: userObj.message,
+      id: userObj.userId,
+      roomName: userObj.room,
+      comment: 'this is coming from the server',
+    }
+    io.to(userObj.room).emit('message', obj);
   })
 
   // broadcast to all clients when a user connects

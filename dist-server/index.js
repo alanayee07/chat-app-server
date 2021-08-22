@@ -19,30 +19,24 @@ var PORT = process.env.PORT || 7000; // set up connection event listener between
 
 io.on('connection', function (socket) {
   // const { id } = socket.client;
-  console.log('user connected on socketID: ', socket.id); // socket.on('join', room => {
-  //   socket.join(room.roomId);
-  //   const roomObj = {
-  //     roomId: room.roomId,
-  //     comment: 'roomName coming from the server',
-  //   }
-  //   console.log('joined room: ', roomObj);
-  //   io.to(room.roomId).emit('join', roomObj);
-  // })
-  // broadcast message to 1 user connected
+  console.log('user connected on socketID: ', socket.id);
+  var currentRoom; // broadcast message to 1 user connected
 
-  socket.on("message", function (userObj, msg) {
+  socket.on("message", function (userObj) {
     console.log('userObj', userObj);
 
-    if (userObj.room) {
+    if (userObj.room && !currentRoom) {
+      currentRoom = userObj.room;
       socket.join(userObj.room);
-      var obj = {
-        message: userObj.message,
-        id: userObj.userId,
-        roomName: userObj.room,
-        comment: 'this is coming from the server'
-      };
-      io.to(userObj.room).emit('message', obj);
     }
+
+    var obj = {
+      message: userObj.message,
+      id: userObj.userId,
+      roomName: userObj.room,
+      comment: 'this is coming from the server'
+    };
+    io.to(userObj.room).emit('message', obj);
   }); // broadcast to all clients when a user connects
   // socket.broadcast.emit("message", 'A user has joined the chat');
   // when user disconnects
