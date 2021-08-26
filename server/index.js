@@ -13,6 +13,7 @@ const io = socket(server, {
 const PORT = process.env.PORT || 7000;
 
 // set up connection event listener between server and the client
+
 io.on('connection', (socket) => {
   // const { id } = socket.client;
   console.log('user connected on socketID: ', socket.id);
@@ -21,7 +22,7 @@ io.on('connection', (socket) => {
   // broadcast message to 1 user connected
   socket.on("message", (userObj) => {
     console.log('userObj', userObj);
-    if (userObj.room && !currentRoom) {
+    if (userObj.room && (userObj.room !== currentRoom)) {
       currentRoom = userObj.room;
       socket.join(userObj.room);
     }

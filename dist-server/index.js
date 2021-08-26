@@ -25,7 +25,7 @@ io.on('connection', function (socket) {
   socket.on("message", function (userObj) {
     console.log('userObj', userObj);
 
-    if (userObj.room && !currentRoom) {
+    if (userObj.room && userObj.room !== currentRoom) {
       currentRoom = userObj.room;
       socket.join(userObj.room);
     }
