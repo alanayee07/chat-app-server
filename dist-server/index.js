@@ -33,13 +33,12 @@ io.on('connection', function (socket) {
     var obj = {
       message: userObj.message,
       id: userObj.userId,
+      username: userObj.username,
       roomName: userObj.room,
       comment: 'this is coming from the server'
     };
     io.to(userObj.room).emit('message', obj);
-  }); // broadcast to all clients when a user connects
-  // socket.broadcast.emit("message", 'A user has joined the chat');
-  // when user disconnects
+  }); // when user disconnects
 
   socket.on("disconnect", function () {
     console.log('USER DISCONNECTED');
