@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.addUserUserMap = void 0;
+exports.addUserByRoomMap = exports.addUserUserMap = void 0;
 
 // const userMap = {};
 // const usersByRoomMap = {};
@@ -16,4 +16,11 @@ exports.addUserUserMap = addUserUserMap;
 
 var removeUser = function removeUser() {};
 
-var getUser = function getUser() {};
+var getUser = function getUser() {}; // usersByRoomMap functions
+
+
+var addUserByRoomMap = function addUserByRoomMap(userId, room, obj) {
+  obj[userId + room] = [userId, room];
+};
+
+exports.addUserByRoomMap = addUserByRoomMap;

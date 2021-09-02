@@ -31,16 +31,18 @@ io.on('connection', function (socket) {
   console.log('user connected on socketID: ', socket.id);
   socket.on('join', function (userObj) {
     if (!userMap[userObj.userId]) {
-      addUserUserMap(userObj.userId, userObj.room, userObj.username, userMap);
-    }
-
-    console.log('this is userMap: ', userMap); // if (!userMap[userObj.userId]) {
+      (0, _users.addUserUserMap)(userObj.userId, userObj.room, userObj.username, userMap);
+    } // if (!userMap[userObj.userId]) {
     //   userMap[userObj.userId] = userObj.username;
     // }
-    // if (!usersByRoomMap[userObj.userId+userObj.room]) {
-    //   usersByRoomMap[userObj.username+userObj.room] = [userObj.userId, userObj.room];
-    // }
-    // socket.to(userObj.room).emit('message', userMap);
+
+
+    if (!usersByRoomMap[userObj.userId + userObj.room]) {
+      (0, _users.addUserByRoomMap)(userObj.userId, userObj.room, usersByRoomMap); // usersByRoomMap[userObj.userId+userObj.room] = [userObj.userId, userObj.room];
+    }
+
+    console.log('this is the userMap: ', userMap);
+    console.log('this is the usersByRoomMap: ', usersByRoomMap); // socket.to(userObj.room).emit('message', userMap);
     // console.log('this is userMap: ', userMap)
     // console.log('this is usersByRoomMap: ', usersByRoomMap);
   });

@@ -14,4 +14,8 @@ const getUser = () => {
 
 }
 
+// usersByRoomMap functions
 
+export const addUserByRoomMap = (userId, room, obj) => {
+  obj[userId+room] = [userId, room];
+}
