@@ -14,23 +14,40 @@ const PORT = process.env.PORT || 7000;
 
 // set up connection event listener between server and the client
 
+let userMap = {};
+let usersByRoomMap = {};
+
 io.on('connection', (socket) => {
-  // const { id } = socket.client;
   console.log('user connected on socketID: ', socket.id);
+
+  socket.on('join', (userObj) => {
+
+    if (!userMap[userObj.userId]) {
+      userMap[userObj.userId] = userObj.username;
+    }
+    if (!usersByRoomMap[userObj.userId+userObj.room]) {
+      usersByRoomMap[userObj.username+userObj.room] = [userObj.userId, userObj.room];
+    }
+    socket.to(userObj.room).emit('message', userMap);
+    console.log('this is userMap: ', userMap)
+    console.log('this is usersByRoomMap: ', usersByRoomMap);
+  })
+
 
   let currentRoom;
   // broadcast message to 1 user connected
   socket.on("message", (userObj) => {
-    console.log('userObj', userObj);
     if (userObj.room && (userObj.room !== currentRoom)) {
       currentRoom = userObj.room;
       socket.join(userObj.room);
     }
+
     const obj = {
       message: userObj.message,
       id: userObj.userId,
       username: userObj.username,
       roomName: userObj.room,
+      timestamp: new Date(),
       comment: 'this is coming from the server',
     }
     io.to(userObj.room).emit('message', obj);
