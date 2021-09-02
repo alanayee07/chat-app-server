@@ -1,16 +1,24 @@
 "use strict";
 
-var express = require('express');
+var _express = _interopRequireDefault(require("express"));
 
-var http = require('http');
+var _http = _interopRequireDefault(require("http"));
 
-var app = express();
-var server = http.createServer(app);
+var _socket = _interopRequireDefault(require("socket.io"));
 
-var socket = require('socket.io'); // sets up a new server instance of socket.io
+var _users = require("./users");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+// const express = require('express');
+// const http = require('http');
+// const socket = require('socket.io');
+var app = (0, _express["default"])();
+
+var server = _http["default"].createServer(app); // sets up a new server instance of socket.io
 
 
-var io = socket(server, {
+var io = (0, _socket["default"])(server, {
   cors: {
     origin: '*'
   }
@@ -23,16 +31,18 @@ io.on('connection', function (socket) {
   console.log('user connected on socketID: ', socket.id);
   socket.on('join', function (userObj) {
     if (!userMap[userObj.userId]) {
-      userMap[userObj.userId] = userObj.username;
+      addUserUserMap(userObj.userId, userObj.room, userObj.username, userMap);
     }
 
-    if (!usersByRoomMap[userObj.userId + userObj.room]) {
-      usersByRoomMap[userObj.username + userObj.room] = [userObj.userId, userObj.room];
-    }
-
-    socket.to(userObj.room).emit('message', userMap);
-    console.log('this is userMap: ', userMap);
-    console.log('this is usersByRoomMap: ', usersByRoomMap);
+    console.log('this is userMap: ', userMap); // if (!userMap[userObj.userId]) {
+    //   userMap[userObj.userId] = userObj.username;
+    // }
+    // if (!usersByRoomMap[userObj.userId+userObj.room]) {
+    //   usersByRoomMap[userObj.username+userObj.room] = [userObj.userId, userObj.room];
+    // }
+    // socket.to(userObj.room).emit('message', userMap);
+    // console.log('this is userMap: ', userMap)
+    // console.log('this is usersByRoomMap: ', usersByRoomMap);
   });
   var currentRoom; // broadcast message to 1 user connected
 
