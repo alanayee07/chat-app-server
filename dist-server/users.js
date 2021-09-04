@@ -19,8 +19,9 @@ var removeUser = function removeUser() {};
 var getUser = function getUser() {}; // usersByRoomMap functions
 
 
-var addUserByRoomMap = function addUserByRoomMap(userId, room, obj) {
+var addUserByRoomMap = function addUserByRoomMap(userId, room, username, obj) {
   obj[userId + room] = [userId, room];
+  obj.message = 'user has entered the chat';
 };
 
 exports.addUserByRoomMap = addUserByRoomMap;

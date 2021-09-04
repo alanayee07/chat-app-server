@@ -17,6 +17,7 @@ const getUser = () => {
 
 // usersByRoomMap functions
 
-export const addUserByRoomMap = (userId, room, obj) => {
+export const addUserByRoomMap = (userId, room, username, obj) => {
   obj[userId+room] = [userId, room];
+  obj.message = 'user has entered the chat';
 }

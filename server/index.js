@@ -27,14 +27,13 @@ io.on('connection', (socket) => {
 
     if (!userMap[userObj.userId]) {
       addUserUserMap(userObj.userId, userObj.room, userObj.username, userMap);
-      console.log('user has joined the chat!: ', userMap.message);
       // io.to(userObj.room).emit('message', userMap);
+
     }
     if (!usersByRoomMap[userObj.userId+userObj.room]) {
-      addUserByRoomMap(userObj.userId, userObj.room, usersByRoomMap);
+      addUserByRoomMap(userObj.userId, userObj.room, userObj.username, usersByRoomMap);
     }
-    console.log('this is the userMap: ', userMap);
-    // console.log('this is the usersByRoomMap: ', usersByRoomMap);
+    // console.log('this is the userMap: ', userMap);
     io.to(userObj.room).emit('join', usersByRoomMap);
   })
 
@@ -47,8 +46,8 @@ io.on('connection', (socket) => {
       socket.join(userObj.room);
     }
 
-    const obj = {
-      message: userObj.message,
+    const messageObj = {
+      message: userObj.message || 'has joined the chat',
       id: userObj.userId,
       username: userObj.username,
       roomName: userObj.room,
@@ -60,7 +59,7 @@ io.on('connection', (socket) => {
     //   message: `${userObj.username} has joined the chat`
     // }
     // io.to(userObj.room).emit('message', joinedRoomObj);
-    io.to(userObj.room).emit('message', obj);
+    io.to(userObj.room).emit('message', messageObj);
   })
 
   // when user disconnects
