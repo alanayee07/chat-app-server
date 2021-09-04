@@ -1,6 +1,3 @@
-// const express = require('express');
-// const http = require('http');
-// const socket = require('socket.io');
 import express from "express"
 import http from 'http'
 import socket from 'socket.io'
@@ -30,19 +27,15 @@ io.on('connection', (socket) => {
 
     if (!userMap[userObj.userId]) {
       addUserUserMap(userObj.userId, userObj.room, userObj.username, userMap);
+      console.log('user has joined the chat!: ', userMap.message);
+      // io.to(userObj.room).emit('message', userMap);
     }
-    // if (!userMap[userObj.userId]) {
-    //   userMap[userObj.userId] = userObj.username;
-    // }
     if (!usersByRoomMap[userObj.userId+userObj.room]) {
       addUserByRoomMap(userObj.userId, userObj.room, usersByRoomMap);
-      // usersByRoomMap[userObj.userId+userObj.room] = [userObj.userId, userObj.room];
     }
     console.log('this is the userMap: ', userMap);
-    console.log('this is the usersByRoomMap: ', usersByRoomMap);
-    // socket.to(userObj.room).emit('message', userMap);
-    // console.log('this is userMap: ', userMap)
-    // console.log('this is usersByRoomMap: ', usersByRoomMap);
+    // console.log('this is the usersByRoomMap: ', usersByRoomMap);
+    io.to(userObj.room).emit('join', usersByRoomMap);
   })
 
 
@@ -62,6 +55,11 @@ io.on('connection', (socket) => {
       timestamp: new Date(),
       comment: 'this is coming from the server',
     }
+
+    // const joinedRoomObj = {
+    //   message: `${userObj.username} has joined the chat`
+    // }
+    // io.to(userObj.room).emit('message', joinedRoomObj);
     io.to(userObj.room).emit('message', obj);
   })
 

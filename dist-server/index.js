@@ -10,9 +10,6 @@ var _users = require("./users");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-// const express = require('express');
-// const http = require('http');
-// const socket = require('socket.io');
 var app = (0, _express["default"])();
 
 var server = _http["default"].createServer(app); // sets up a new server instance of socket.io
@@ -32,19 +29,16 @@ io.on('connection', function (socket) {
   socket.on('join', function (userObj) {
     if (!userMap[userObj.userId]) {
       (0, _users.addUserUserMap)(userObj.userId, userObj.room, userObj.username, userMap);
-    } // if (!userMap[userObj.userId]) {
-    //   userMap[userObj.userId] = userObj.username;
-    // }
-
-
-    if (!usersByRoomMap[userObj.userId + userObj.room]) {
-      (0, _users.addUserByRoomMap)(userObj.userId, userObj.room, usersByRoomMap); // usersByRoomMap[userObj.userId+userObj.room] = [userObj.userId, userObj.room];
+      console.log('user has joined the chat!: ', userMap.message); // io.to(userObj.room).emit('message', userMap);
     }
 
-    console.log('this is the userMap: ', userMap);
-    console.log('this is the usersByRoomMap: ', usersByRoomMap); // socket.to(userObj.room).emit('message', userMap);
-    // console.log('this is userMap: ', userMap)
-    // console.log('this is usersByRoomMap: ', usersByRoomMap);
+    if (!usersByRoomMap[userObj.userId + userObj.room]) {
+      (0, _users.addUserByRoomMap)(userObj.userId, userObj.room, usersByRoomMap);
+    }
+
+    console.log('this is the userMap: ', userMap); // console.log('this is the usersByRoomMap: ', usersByRoomMap);
+
+    io.to(userObj.room).emit('join', usersByRoomMap);
   });
   var currentRoom; // broadcast message to 1 user connected
 
@@ -61,7 +55,11 @@ io.on('connection', function (socket) {
       roomName: userObj.room,
       timestamp: new Date(),
       comment: 'this is coming from the server'
-    };
+    }; // const joinedRoomObj = {
+    //   message: `${userObj.username} has joined the chat`
+    // }
+    // io.to(userObj.room).emit('message', joinedRoomObj);
+
     io.to(userObj.room).emit('message', obj);
   }); // when user disconnects
 
