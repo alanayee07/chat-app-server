@@ -1,7 +1,8 @@
 import express from "express"
 import http from 'http'
 import socket from 'socket.io'
-import {addUserUserMap, addUserByRoomMap} from './users'
+import {addUserInUserMap, addUserByRoomMap} from './users'
+import {getUserRoomKey} from './utils'
 
 const app = express();
 const server = http.createServer(app);
@@ -26,11 +27,13 @@ io.on('connection', (socket) => {
   socket.on('join', (userObj) => {
 
     if (!userMap[userObj.userId]) {
-      addUserUserMap(userObj.userId, userObj.room, userObj.username, userMap);
+      addUserInUserMap(userObj.userId, userObj.room, userObj.username, userMap);
     }
-    if (!usersByRoomMap[userObj.userId+userObj.room]) {
+    if (!usersByRoomMap[getUserRoomKey(userObj.userId+userObj.room)]) {
       addUserByRoomMap(userObj.userId, userObj.room, userObj.username, usersByRoomMap);
     }
+    console.log('this is userMap: ', userMap);
+    console.log('this is usersByRoomMap: ', usersByRoomMap)
   })
 
   let currentRoom;

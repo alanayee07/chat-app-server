@@ -8,6 +8,8 @@ var _socket = _interopRequireDefault(require("socket.io"));
 
 var _users = require("./users");
 
+var _utils = require("./utils");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var app = (0, _express["default"])();
@@ -28,12 +30,15 @@ io.on('connection', function (socket) {
   console.log('user connected on socketID: ', socket.id);
   socket.on('join', function (userObj) {
     if (!userMap[userObj.userId]) {
-      (0, _users.addUserUserMap)(userObj.userId, userObj.room, userObj.username, userMap);
+      (0, _users.addUserInUserMap)(userObj.userId, userObj.room, userObj.username, userMap);
     }
 
-    if (!usersByRoomMap[userObj.userId + userObj.room]) {
+    if (!usersByRoomMap[(0, _utils.getUserRoomKey)(userObj.userId + userObj.room)]) {
       (0, _users.addUserByRoomMap)(userObj.userId, userObj.room, userObj.username, usersByRoomMap);
     }
+
+    console.log('this is userMap: ', userMap);
+    console.log('this is usersByRoomMap: ', usersByRoomMap);
   });
   var currentRoom; // broadcast message to 1 user connected
 

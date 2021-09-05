@@ -1,10 +1,11 @@
 // const userMap = {};
 // const usersByRoomMap = {};
 
-// userMap functions
-export const addUserUserMap = (userId, roomName, username, obj) => {
-  obj[userId+room] = username;
+import {getUserRoomKey} from './utils'
 
+// userMap functions
+export const addUserInUserMap = (userId, roomName, username, userMap) => {
+  userMap[userId] = username;
 }
 
 const removeUser = () => {
@@ -13,6 +14,7 @@ const removeUser = () => {
 
 // usersByRoomMap functions
 
-export const addUserByRoomMap = (userId, roomName, username, obj) => {
-  obj[userId+room] = [userId, room];
+export const addUserByRoomMap = (userId, roomName, username, usersByRoomMap) => {
+  const userRoomKey = getUserRoomKey(userId, roomName);
+  obj[userRoomKey] = [userId, room];
 }
