@@ -27,10 +27,10 @@ io.on('connection', (socket) => {
   socket.on('join', (userObj) => {
 
     if (!userMap[userObj.userId]) {
-      addUserInUserMap(userObj.userId, userObj.room, userObj.username, userMap);
+      addUserInUserMap(userObj.userId, userObj.username, userMap);
     }
     if (!usersByRoomMap[getUserRoomKey(userObj.userId+userObj.room)]) {
-      addUserByRoomMap(userObj.userId, userObj.room, userObj.username, usersByRoomMap);
+      addUserByRoomMap(userObj.userId, userObj.room,  usersByRoomMap);
     }
     console.log('this is userMap: ', userMap);
     console.log('this is usersByRoomMap: ', usersByRoomMap)
@@ -44,6 +44,7 @@ io.on('connection', (socket) => {
       socket.join(userObj.room);
       io.to(userObj.room).emit('join', userMap);
     }
+
 
     const messageObj = {
       message: userObj.message || userObj.username + ' has joined the chat',

@@ -3,18 +3,49 @@
 
 import {getUserRoomKey} from './utils'
 
-// userMap functions
-export const addUserInUserMap = (userId, roomName, username, userMap) => {
+/**
+ * user added to userMap
+ * @param {*} userId
+ * @param {*} username
+ * @param {*} userMap
+ */
+export const addUserInUserMap = (userId, username, userMap) => {
   userMap[userId] = username;
 }
 
-const removeUser = () => {
-
+/**
+ * when user disconnects from chat app
+ * @param {*} userId
+ * @param {*} username
+ * @param {*} userMap
+ */
+const removeUserInUserMap = (userId, username, userMap) => {
+  if (userMap[userId]) {
+    delete userMap[userId];
+  }
 }
 
-// usersByRoomMap functions
+/**
+ * when user is added to usersByRoomMap
+ * @param {*} userId
+ * @param {*} roomName
+ * @param {*} usersByRoomMap
+ */
 
-export const addUserByRoomMap = (userId, roomName, username, usersByRoomMap) => {
+export const addUserByRoomMap = (userId, roomName,  usersByRoomMap) => {
   const userRoomKey = getUserRoomKey(userId, roomName);
   usersByRoomMap[userRoomKey] = [userId, roomName];
+}
+
+/**
+ * when user leaves current chatroom
+ * @param {*} userId
+ * @param {*} roomName
+ * @param {*} usersByRoomMap
+ */
+const removeUserByRoomMap = (userId, roomName, usersByRoomMap) => {
+  const userRoomKey = getUserRoomKey(userId, roomName);
+  if (usersByRoomMap[userRoomKey]) {
+    delete usersByRoomMap[userRoomKey];
+  }
 }
