@@ -19,7 +19,7 @@ export const addUserInUserMap = (userId, username, userMap) => {
  * @param {*} username
  * @param {*} userMap
  */
-const removeUserInUserMap = (userId, username, userMap) => {
+export const removeUserInUserMap = (userId, username, userMap) => {
   if (userMap[userId]) {
     delete userMap[userId];
   }
@@ -43,7 +43,7 @@ export const addUserByRoomMap = (userId, roomName,  usersByRoomMap) => {
  * @param {*} roomName
  * @param {*} usersByRoomMap
  */
-const removeUserByRoomMap = (userId, roomName, usersByRoomMap) => {
+export const removeUserByRoomMap = (userId, roomName, usersByRoomMap) => {
   const userRoomKey = getUserRoomKey(userId, roomName);
   if (usersByRoomMap[userRoomKey]) {
     delete usersByRoomMap[userRoomKey];

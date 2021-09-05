@@ -24,6 +24,8 @@ const usersByRoomMap = {};
 io.on('connection', (socket) => {
   console.log('user connected on socketID: ', socket.id);
 
+  let currentRoom;
+
   socket.on('join', (userObj) => {
 
     if (!userMap[userObj.userId]) {
@@ -32,18 +34,18 @@ io.on('connection', (socket) => {
     if (!usersByRoomMap[getUserRoomKey(userObj.userId+userObj.room)]) {
       addUserByRoomMap(userObj.userId, userObj.room,  usersByRoomMap);
     }
-    console.log('this is userMap: ', userMap);
-    console.log('this is usersByRoomMap: ', usersByRoomMap)
-  })
-
-  let currentRoom;
-  // broadcast message to 1 user connected
-  socket.on("message", (userObj) => {
     if (userObj.room && (userObj.room !== currentRoom)) {
       currentRoom = userObj.room;
       socket.join(userObj.room);
       io.to(userObj.room).emit('join', userMap);
     }
+    console.log('this is userMap: ', userMap);
+    console.log('this is usersByRoomMap: ', usersByRoomMap)
+  })
+  // broadcast message to 1 user connected
+  socket.on("message", (userObj) => {
+
+    // if in currentroom and want to join different room, remove user from currentroom, then join new room
 
 
     const messageObj = {
