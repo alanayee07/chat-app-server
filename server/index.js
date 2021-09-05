@@ -1,8 +1,8 @@
 import express from "express"
 import http from 'http'
 import socket from 'socket.io'
-import {addUserInUserMap, addUserByRoomMap} from './users'
-import {getUserRoomKey} from './utils'
+import {addUserInUserMap, addUserByRoomMap, removeUserInUserMap, removeUserByRoomMap} from './users'
+import {getUserRoomKey, getExistingRoomById} from './utils'
 
 const app = express();
 const server = http.createServer(app);
@@ -24,21 +24,36 @@ const usersByRoomMap = {};
 io.on('connection', (socket) => {
   console.log('user connected on socketID: ', socket.id);
 
-  let currentRoom;
+  // let currentRoom;
 
   socket.on('join', (userObj) => {
+    // if (userObj.room && (userObj.room !== currentRoom)) {
+    //   currentRoom = userObj.room;
+    //   socket.join(userObj.room);
+    //   io.to(userObj.room).emit('join', userMap);
+    // }
+
+    const existingRoomName = getExistingRoomById(userObj.userId, usersByRoomMap);
+
+    if (existingRoomName) {
+      removeUserByRoomMap(userObj.userId, existingRoomName, usersByRoomMap);
+    }
+    addUserByRoomMap(userObj.userId, userObj.room, usersByRoomMap);
+    // if user exists in a room
+    // remove the user from userROomByMAp
+
+    // addUser to userByRoomMap
+    // join new room
 
     if (!userMap[userObj.userId]) {
       addUserInUserMap(userObj.userId, userObj.username, userMap);
     }
-    if (!usersByRoomMap[getUserRoomKey(userObj.userId+userObj.room)]) {
-      addUserByRoomMap(userObj.userId, userObj.room,  usersByRoomMap);
-    }
-    if (userObj.room && (userObj.room !== currentRoom)) {
-      currentRoom = userObj.room;
-      socket.join(userObj.room);
-      io.to(userObj.room).emit('join', userMap);
-    }
+    // if (!usersByRoomMap[getUserRoomKey(userObj.userId, userObj.room)]) {
+    //   addUserByRoomMap(userObj.userId, userObj.room, usersByRoomMap);
+    // }
+
+    socket.join(userObj.room);
+    io.to(userObj.room).emit('join', userMap);
     console.log('this is userMap: ', userMap);
     console.log('this is usersByRoomMap: ', usersByRoomMap)
   })
