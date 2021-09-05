@@ -27,16 +27,11 @@ io.on('connection', (socket) => {
 
     if (!userMap[userObj.userId]) {
       addUserUserMap(userObj.userId, userObj.room, userObj.username, userMap);
-      // io.to(userObj.room).emit('message', userMap);
-
     }
     if (!usersByRoomMap[userObj.userId+userObj.room]) {
       addUserByRoomMap(userObj.userId, userObj.room, userObj.username, usersByRoomMap);
     }
-    // console.log('this is the userMap: ', userMap);
-    io.to(userObj.room).emit('join', usersByRoomMap);
   })
-
 
   let currentRoom;
   // broadcast message to 1 user connected
@@ -44,21 +39,17 @@ io.on('connection', (socket) => {
     if (userObj.room && (userObj.room !== currentRoom)) {
       currentRoom = userObj.room;
       socket.join(userObj.room);
+      io.to(userObj.room).emit('join', userMap);
     }
 
     const messageObj = {
-      message: userObj.message || 'has joined the chat',
+      message: userObj.message || userObj.username + ' has joined the chat',
       id: userObj.userId,
       username: userObj.username,
       roomName: userObj.room,
       timestamp: new Date(),
       comment: 'this is coming from the server',
     }
-
-    // const joinedRoomObj = {
-    //   message: `${userObj.username} has joined the chat`
-    // }
-    // io.to(userObj.room).emit('message', joinedRoomObj);
     io.to(userObj.room).emit('message', messageObj);
   })
 
