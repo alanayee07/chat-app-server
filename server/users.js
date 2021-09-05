@@ -16,5 +16,5 @@ const removeUser = () => {
 
 export const addUserByRoomMap = (userId, roomName, username, usersByRoomMap) => {
   const userRoomKey = getUserRoomKey(userId, roomName);
-  obj[userRoomKey] = [userId, room];
+  usersByRoomMap[userRoomKey] = [userId, roomName];
 }
