@@ -27,11 +27,6 @@ io.on('connection', (socket) => {
   // let currentRoom;
 
   socket.on('join', (userObj) => {
-    // if (userObj.room && (userObj.room !== currentRoom)) {
-    //   currentRoom = userObj.room;
-    //   socket.join(userObj.room);
-    //   io.to(userObj.room).emit('join', userMap);
-    // }
 
     const existingRoomName = getExistingRoomById(userObj.userId, usersByRoomMap);
 
@@ -39,18 +34,10 @@ io.on('connection', (socket) => {
       removeUserByRoomMap(userObj.userId, existingRoomName, usersByRoomMap);
     }
     addUserByRoomMap(userObj.userId, userObj.room, usersByRoomMap);
-    // if user exists in a room
-    // remove the user from userROomByMAp
-
-    // addUser to userByRoomMap
-    // join new room
 
     if (!userMap[userObj.userId]) {
       addUserInUserMap(userObj.userId, userObj.username, userMap);
     }
-    // if (!usersByRoomMap[getUserRoomKey(userObj.userId, userObj.room)]) {
-    //   addUserByRoomMap(userObj.userId, userObj.room, usersByRoomMap);
-    // }
 
     socket.join(userObj.room);
     io.to(userObj.room).emit('join', userMap);
@@ -70,7 +57,16 @@ io.on('connection', (socket) => {
       roomName: userObj.room,
       timestamp: new Date(),
       comment: 'this is coming from the server',
+      isChatBot: false
     }
+
+    /**
+     * initial chatbot message
+     */
+    if (messageObj.message === userObj.username + ' has joined the chat') {
+      messageObj.isChatBot = true;
+    }
+
     io.to(userObj.room).emit('message', messageObj);
   })
 
