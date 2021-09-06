@@ -57,16 +57,8 @@ io.on('connection', (socket) => {
       roomName: userObj.room,
       timestamp: new Date(),
       comment: 'this is coming from the server',
-      isChatBot: false
+      isChatBot: !userObj.message
     }
-
-    /**
-     * initial chatbot message
-     */
-    if (messageObj.message === userObj.username + ' has joined the chat') {
-      messageObj.isChatBot = true;
-    }
-
     io.to(userObj.room).emit('message', messageObj);
   })
 
