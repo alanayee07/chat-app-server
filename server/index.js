@@ -44,10 +44,8 @@ io.on('connection', (socket) => {
     console.log('this is userMap: ', userMap);
     console.log('this is usersByRoomMap: ', usersByRoomMap)
   })
-  // broadcast message to 1 user connected
-  socket.on("message", (userObj) => {
 
-    // if in currentroom and want to join different room, remove user from currentroom, then join new room
+  socket.on("message", (userObj) => {
 
 
     const messageObj = {
