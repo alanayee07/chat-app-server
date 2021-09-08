@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
     }
 
     socket.join(userObj.room);
-    io.to(userObj.room).emit('join', userMap);
+    io.emit('join', userMap);
     console.log('this is userMap: ', userMap);
     console.log('this is usersByRoomMap: ', usersByRoomMap)
   })
