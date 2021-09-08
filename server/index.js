@@ -39,6 +39,7 @@ io.on('connection', (socket) => {
       addUserInUserMap(userObj.userId, userObj.username, userMap);
     }
 
+
     socket.join(userObj.room);
     io.emit('join', userMap);
     console.log('this is userMap: ', userMap);
