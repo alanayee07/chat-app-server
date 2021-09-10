@@ -24,8 +24,6 @@ const usersByRoomMap = {};
 io.on('connection', (socket) => {
   console.log('user connected on socketID: ', socket.id);
 
-  // let currentRoom;
-
   socket.on('join', (userObj) => {
 
     const existingRoomName = getExistingRoomById(userObj.userId, usersByRoomMap);
@@ -41,7 +39,7 @@ io.on('connection', (socket) => {
 
 
     socket.join(userObj.room);
-    io.emit('join', userMap);
+    io.emit('join', userMap, usersByRoomMap);
     console.log('this is userMap: ', userMap);
     console.log('this is usersByRoomMap: ', usersByRoomMap)
   })
@@ -64,7 +62,6 @@ io.on('connection', (socket) => {
   // when user disconnects
   socket.on("disconnect", () => {
     console.log('USER DISCONNECTED');
-    io.emit("message", 'a user has left the chat');
   })
 })
 
