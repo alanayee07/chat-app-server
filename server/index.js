@@ -13,7 +13,6 @@ const io = socket(server, {
   }
 })
 
-
 const PORT = process.env.PORT || 7000;
 
 // set up connection event listener between server and the client
